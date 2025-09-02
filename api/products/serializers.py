@@ -40,13 +40,17 @@ class ProductSerializer(serializers.ModelSerializer):
     available_sizes = serializers.SerializerMethodField()
     image_url = serializers.SerializerMethodField()
     detail_images = serializers.SerializerMethodField()
+    has_discount = serializers.ReadOnlyField()
+    display_price = serializers.ReadOnlyField()
+    original_price = serializers.ReadOnlyField()
 
     class Meta:
         model = Product
         fields = [
             'id', 'name', 'slug', 'image_url', 'description', 
-            'price', 'stock', 'available', 'category', 'sizes',
-            'is_featured', 'detail_images', 'available_sizes', 'created', 'updated'
+            'price', 'discount_active', 'discount_percent', 'price_after_discount', 'stock', 'available', 'category', 'sizes',
+            'is_featured', 'detail_images', 'available_sizes', 'created', 'updated',
+            'has_discount', 'display_price', 'original_price'
         ]
 
     def get_image_url(self, obj):

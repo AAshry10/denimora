@@ -5,6 +5,7 @@ import { useCartMenu } from "../../contexts/CartMenuContext";
 import { useMobileMenu } from '../../contexts/MobileMenuContext';
 import { useCart } from '../../contexts/CartContext';
 import ProgressBarManager from '../Shared/ProgressBarManager';
+import PriceDisplay from '../Shared/PriceDisplay';
 import apiService from '../../services/api';
 import facebookPixel from '../../services/facebookPixel';
 import '../../CSS/bootstrap.css';
@@ -63,14 +64,21 @@ const ItemDetails = () => {
               id: product.id,
               name: product.name,
               price: parseFloat(product.price),
+              discount_active: product.discount_active,
+              discount_percent: product.discount_percent,
+              price_after_discount: product.price_after_discount,
+              has_discount: product.has_discount,
+              display_price: product.display_price,
+              original_price: product.original_price,
               image: product.image_url || product.image,
               description: product.description,
               slug: product.slug,
               available_sizes: product.available_sizes || [],
               sizes: product.sizes || [],
-              detail_images: product.detail_images || [] // <-- add this line
+              detail_images: product.detail_images || []
             });
-            setBasePrice(parseFloat(product.price));
+            // Use display_price for calculations if available, otherwise use price
+            setBasePrice(parseFloat(product.display_price || product.price));
             document.title = `DENIMORA - ${product.name}`;
 
             // Track Facebook Pixel ViewContent event
@@ -198,16 +206,30 @@ const ItemDetails = () => {
       }
     }
 
+    // Calculate discount info - must check discount_active flag
+    const hasDiscount = itemData.discount_active === true && 
+      itemData.discount_percent && 
+      itemData.discount_percent > 0;
+    const originalPrice = itemData.price; // This is always the original price from API
+    const discountedPrice = itemData.display_price || itemData.price_after_discount;
+    const finalPrice = hasDiscount && discountedPrice ? discountedPrice : originalPrice;
+
     const item = {
       product_id: itemData.id || null,
       name: itemData.name,
-      price: itemData.price,
+      price: finalPrice,
+      original_price: originalPrice,
+      has_discount: hasDiscount,
+      discount_active: itemData.discount_active,
+      discount_percent: itemData.discount_percent,
+      price_after_discount: discountedPrice,
+      display_price: itemData.display_price,
       image: itemData.image,
       image_url: itemData.image,
       size: selectedSize,
       size_id: sizeId,
       quantity: quantity,
-      totalPrice: itemData.price * quantity
+      totalPrice: finalPrice * quantity
     };
 
     try {
@@ -445,7 +467,11 @@ const ItemDetails = () => {
         <div className="shop-item-content">
           <div className="content-text">
             <h3 id="productName">{itemData?.name || 'Loading...'}</h3>
-            <h3>LE {basePrice.toFixed(2)}</h3>
+            {itemData ? (
+              <PriceDisplay product={itemData} className="large" />
+            ) : (
+              <h3>LE {basePrice.toFixed(2)}</h3>
+            )}
             <p>
               {itemData?.description || `100% cotton of softness and does not contain polyester and elastin,
                 High quality due to the methods of fabric and treatment,

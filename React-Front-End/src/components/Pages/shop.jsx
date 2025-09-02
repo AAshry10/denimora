@@ -4,6 +4,7 @@ import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCartPopup } from '../Layout/MainLayout';
 import ProgressBarManager from '../Shared/ProgressBarManager';
+import PriceDisplay from '../Shared/PriceDisplay';
 import apiService from '../../services/api';
 import '../../CSS/bootstrap.css';
 import '../../CSS/Styles.css';
@@ -144,7 +145,7 @@ const Shop = () => {
                 </div>
                 <div className="cart-text">
                   <h3>{product.name}</h3>
-                  <p>LE {Number(product.price).toFixed(2)}</p>
+                  <PriceDisplay product={product} />
                 </div>
               </div>
             ))

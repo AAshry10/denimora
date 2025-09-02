@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useCartMenu } from "../../contexts/CartMenuContext";
 import { useCart } from "../../contexts/CartContext";
+import PriceDisplay from "./PriceDisplay";
 import apiService from "../../services/api";
 import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -67,17 +68,30 @@ const CartPopup = ({
           return;
         }
 
-        // Create cart item with appropriate structure
+        // Create cart item with appropriate structure - use discounted price if available
+        const hasDiscount = selectedProduct.discount_active === true && 
+          selectedProduct.discount_percent && 
+          selectedProduct.discount_percent > 0;
+        const originalPrice = selectedProduct.price; // This is always the original price from API
+        const discountedPrice = selectedProduct.display_price || selectedProduct.price_after_discount;
+        const finalPrice = hasDiscount && discountedPrice ? discountedPrice : originalPrice;
+
         const item = {
           product_id: selectedProduct.id,
           name: selectedProduct.name,
-          price: parseFloat(selectedProduct.price),
+          price: parseFloat(finalPrice),
+          original_price: parseFloat(originalPrice),
+          has_discount: hasDiscount,
+          discount_active: selectedProduct.discount_active,
+          discount_percent: selectedProduct.discount_percent,
+          price_after_discount: discountedPrice ? parseFloat(discountedPrice) : null,
+          display_price: selectedProduct.display_price ? parseFloat(selectedProduct.display_price) : null,
           image: selectedProduct.image_url || selectedProduct.image,
           image_url: selectedProduct.image_url || selectedProduct.image,
           size: selectedSize,
           size_id: sizeId,
           quantity: 1,
-          totalPrice: parseFloat(selectedProduct.price) * 1
+          totalPrice: parseFloat(finalPrice) * 1
         };
 
         // Add to cart using the updated async method
@@ -149,7 +163,7 @@ const CartPopup = ({
         />
 
         <h3>{selectedProduct.name}</h3>
-        <p>Price: LE {Number(selectedProduct.price).toFixed(2)}</p>
+        <PriceDisplay product={selectedProduct} showLabel={true} />
 
         <div className="size-btns">
           {isLoadingSizes ? (

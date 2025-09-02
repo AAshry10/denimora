@@ -220,12 +220,19 @@ export const CartProvider = ({ children }) => {
         if (reservation.data.success) {
           console.log("Item reserved successfully (1 min expiry):", reservation.data);
           
-          // Add to local cart with reservation info
+          // Add to local cart with reservation info - use the price passed (which should be discounted)
+          const effectivePrice = parseFloat(item.price) || 0;
           const newItem = {
             id: item.product_id || `${item.name}_${item.size}_${Date.now()}`,
             product_id: item.product_id,
             name: item.name,
-            price: parseFloat(item.price) || 0,
+            price: effectivePrice,
+            original_price: item.original_price,
+            has_discount: item.has_discount,
+            discount_active: item.discount_active,
+            discount_percent: item.discount_percent,
+            price_after_discount: item.price_after_discount,
+            display_price: item.display_price,
             size: item.size,
             size_id: item.size_id,
             quantity: item.quantity || 1,
@@ -233,7 +240,7 @@ export const CartProvider = ({ children }) => {
             image_url: item.image_url || item.image,
             reservation_id: reservation.data.reservation_id,
             reserved_until: reservation.data.expires_at,
-            totalPrice: (parseFloat(item.price) || 0) * (item.quantity || 1)
+            totalPrice: effectivePrice * (item.quantity || 1)
           };
 
           setCartItems(prevItems => {
@@ -334,17 +341,24 @@ export const CartProvider = ({ children }) => {
         
         return updatedItems;
       } else {
+        const effectivePrice = parseFloat(item.price) || 0;
         const newItem = {
           id: item.product_id || `${item.name}_${item.size}_${Date.now()}`,
           product_id: item.product_id,
           name: item.name,
-          price: parseFloat(item.price) || 0,
+          price: effectivePrice,
+          original_price: item.original_price,
+          has_discount: item.has_discount,
+          discount_active: item.discount_active,
+          discount_percent: item.discount_percent,
+          price_after_discount: item.price_after_discount,
+          display_price: item.display_price,
           size: item.size,
           size_id: item.size_id,
           quantity: item.quantity || 1,
           image: item.image || item.image_url,
           image_url: item.image_url || item.image,
-          totalPrice: (parseFloat(item.price) || 0) * (item.quantity || 1)
+          totalPrice: effectivePrice * (item.quantity || 1)
         };
         
         return [...prevItems, newItem];

@@ -48,6 +48,9 @@ class Product(models.Model):
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True, storage=GitHubMediaStorage())
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_active = models.BooleanField(default=False, help_text="Enable/disable discount for this product")
+    discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Discount percentage (0-100)")
+    price_after_discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Price after applying discount")
     sizes = models.ManyToManyField(Size, related_name='products', blank=True)
     stock = models.PositiveIntegerField(default=1)
     available = models.BooleanField(default=True)
@@ -81,6 +84,25 @@ class Product(models.Model):
                 return f"{backend_url.rstrip('/')}{self.image.url}"
             return self.image.url
         return '/static/Assets/Shop/default-product.jpg'
+    
+    @property
+    def has_discount(self):
+        """Returns True if the product has an active discount"""
+        return (self.discount_active and 
+                self.discount_percent is not None and 
+                self.discount_percent > 0)
+    
+    @property
+    def display_price(self):
+        """Returns the price to display to customers (discounted if available)"""
+        if self.has_discount and self.price_after_discount is not None:
+            return self.price_after_discount
+        return self.price
+    
+    @property
+    def original_price(self):
+        """Returns the original price (before discount)"""
+        return self.price
 
 
 class ProductSize(models.Model):

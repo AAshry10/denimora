@@ -1,0 +1,193 @@
+/* Price Display Component Styles */
+
+:root {
+    --Site-Bg--: white;
+    --Gold--: #B59F73;
+    --text-color--: #28355B;
+    --popUp-Overlay--: rgba(10, 10, 10, 0.8);
+}
+
+.price-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Center cart-text content for shop and home pages */
+.cart-text {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-text .price-display {
+  justify-content: center;
+}
+
+/* Center prices in cart popup */
+.popup-content .price-display {
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.popup-content h3,
+.popup-content p {
+  text-align: center;
+}
+
+/* Keep left alignment for cart and checkout */
+.cart-item-details .price-display,
+.cart-item-details-page .price-display,
+.order-summary-item-price .price-display {
+  justify-content: flex-start;
+}
+
+/* Horizontal layout for cart and checkout discount display */
+.cart-item-details .price-display.has-discount,
+.cart-item-details-page .price-display.has-discount,
+.order-summary-item-price .price-display.has-discount {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-item-details .discount-price-container,
+.cart-item-details-page .discount-price-container,
+.order-summary-item-price .discount-price-container {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-item-details .original-and-badge,
+.cart-item-details-page .original-and-badge,
+.order-summary-item-price .original-and-badge {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Ensure discount price is properly styled in cart/checkout */
+.cart-item-details .price-display .discounted-price,
+.cart-item-details-page .price-display .discounted-price,
+.order-summary-item-price .price-display .discounted-price {
+  font-size: 1em;
+  margin-bottom: 0;
+}
+
+/* Remove bold from price label in order summary */
+.order-summary-item-price .price-display .price-label {
+  font-weight: normal !important;
+}
+
+/* Specific override for shop and home page centering */
+.shop-section .price-display,
+.products-container .price-display {
+  justify-content: center;
+}
+
+.price-display .price-label {
+  font-weight: normal;
+  color: var(--text-color--);
+}
+
+.price-display .current-price {
+  color: var(--text-color--);
+  font-size: inherit;
+}
+
+.price-display.has-discount {
+  gap: 0;
+  flex-direction: column;
+  align-items: center;
+}
+
+.discount-price-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.price-display .discounted-price {
+  font-weight: bold;
+  color: var(--Gold--);
+  font-size: 1.2em;
+  margin-bottom: 2px;
+}
+
+.original-and-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-display .original-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 0.9em;
+  font-weight: normal;
+}
+
+.price-display .discount-badge {
+  background-color: var(--Gold--);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 0.75em;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .price-display {
+    gap: 6px;
+  }
+  
+  .price-display .discount-badge {
+    font-size: 0.7em;
+    padding: 1px 5px;
+  }
+}
+
+/* Variations for different contexts */
+.price-display.large {
+  font-size: 1.2em;
+}
+
+.price-display.large .discount-badge {
+  font-size: 0.7em;
+}
+
+/* Ensure item details page shows full discount display in one line */
+.shop-item-content .price-display.has-discount {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+.shop-item-content .discount-price-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.shop-item-content .original-and-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-display.small {
+  font-size: 0.9em;
+}
+
+.price-display.small .discount-badge {
+  font-size: 0.65em;
+}

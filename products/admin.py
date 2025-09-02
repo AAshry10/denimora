@@ -25,9 +25,9 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price', 'stock', 'available', 'created', 'updated']
-    list_filter = ['available', 'created', 'updated', 'category']
-    list_editable = ['price', 'stock', 'available']
+    list_display = ['name', 'slug', 'price', 'discount_active', 'discount_percent', 'price_after_discount', 'stock', 'available', 'created', 'updated']
+    list_filter = ['available', 'discount_active', 'created', 'updated', 'category']
+    list_editable = ['price', 'discount_active', 'discount_percent', 'price_after_discount', 'stock', 'available']
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ['name', 'description']
     raw_id_fields = ['category']
@@ -35,6 +35,25 @@ class ProductAdmin(admin.ModelAdmin):
     ordering = ['name']
     inlines = [ProductSizeInline, ProductImageInline]
     filter_horizontal = ['sizes']
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'slug', 'category', 'description', 'image')
+        }),
+        ('Pricing', {
+            'fields': ('price', 'discount_active', 'discount_percent', 'price_after_discount'),
+            'description': 'Set the base price and configure discount options. Use the checkbox to enable/disable discounts.'
+        }),
+        ('Inventory & Availability', {
+            'fields': ('stock', 'available', 'sizes')
+        }),
+        ('Settings', {
+            'fields': ('is_featured',)
+        }),
+    )
+    
+    class Media:
+        js = ('admin/js/product_discount.js',)
 
 @admin.register(ProductSize)
 class ProductSizeAdmin(admin.ModelAdmin):

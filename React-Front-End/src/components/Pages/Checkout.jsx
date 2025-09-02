@@ -4,6 +4,7 @@ import { useCart } from "../../contexts/CartContext";
 import { useCartMenu } from "../../contexts/CartMenuContext";
 import { useMobileMenu } from "../../contexts/MobileMenuContext";
 import ProgressBarManager from "../Shared/ProgressBarManager";
+import PriceDisplay from "../Shared/PriceDisplay";
 import apiService from "../../services/api";
 import facebookPixel from '../../services/facebookPixel';
 import Header from "../Shared/header";
@@ -450,8 +451,7 @@ const Checkout = () => {
                     </div>
 
                     <div className="order-summary-item-price">
-                      {" "}
-                      Price : LE {Number(item.price).toFixed(2)}
+                      <PriceDisplay product={item} showLabel={true} />
                       <br />
                       <span>Quantity : {item.quantity}</span>
                     </div>

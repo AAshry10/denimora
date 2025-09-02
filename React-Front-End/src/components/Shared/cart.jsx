@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCartMenu } from "../../contexts/CartMenuContext";
 import { useCart } from "../../contexts/CartContext";
+import PriceDisplay from "./PriceDisplay";
 
 function useCartHistory(isCartOpen, closeCart) {
   useEffect(() => {
@@ -108,7 +109,7 @@ const Cart = () => {
                   <div className="cart-item-details">
                     <h3>{item.name}</h3>
                     {item.size && <p>Size: {item.size}</p>}
-                    <p>Price: LE {Number(item.price).toFixed(2)}</p>
+                    <PriceDisplay product={item} showLabel={true} />
                     <p>
                       Total: LE{" "}
                       {(Number(item.price) * item.quantity).toFixed(2)}

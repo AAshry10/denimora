@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../contexts/CartContext';
 import ProgressBarManager from '../Shared/ProgressBarManager';
+import PriceDisplay from '../Shared/PriceDisplay';
 import '../../CSS/Styles.css';
 
 const CartPage = () => {
@@ -59,7 +60,7 @@ const CartPage = () => {
                   <div className="cart-item-details-page">
                     <h3>{item.name}</h3>
                     {item.size && <p className="item-size">Size: {item.size}</p>}
-                    <p className="item-price">LE {Number(item.price).toFixed(2)}</p>
+                    <PriceDisplay product={item} showLabel={false} className="item-price" />
                     <p className="item-total">
                       Total: LE {(Number(item.price) * item.quantity).toFixed(2)}
                     </p>
